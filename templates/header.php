@@ -6,17 +6,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $data["headerTitle"] ?></title>
 
-    <link rel="stylesheet" id="typekit-css" href="https://use.typekit.net/oek3jfu.css?ver=1.0.4" type="text/css" media="all">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <!-- Police d'écriture -->
 
-    <link rel="stylesheet" href="css/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
+
+
+    <!-- CSS Bootstrap et CSS-->
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/MarMovies/css/main.css">
+
 </head>
 
 <body>
     <header>
-        <div class="container flex-container">
-            <a class="brand" href="./">MarMovies</a>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="containerNav">
 
-         
-        </div>
+                <a class="navbar-brand" href="./">
+                    Mar Movies
+                </a>
+            
+            </div>
+        </nav>
     </header>
+
+
+
+
+

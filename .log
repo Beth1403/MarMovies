@@ -1,2 +1,6 @@
 21.07.23
-Doc de TMDB :https://developer.themoviedb.org/docs (premier écueil : trouver la clé "Director" et comment y accéder)
+- Doc de TMDB :https://developer.themoviedb.org/docs (premier écueil : trouver la clé "Director" et comment y accéder)
+- Doc de php : https://www.php.net/manual/fr/function.date.php pour mettre la date en format français + page strtotime() pour le timestamp.
+- ChatGPT pour le pas à pas de la configuration de la connexion à l'API TMDb (ligne 1 à 24 d'index.php).
+- Doc Bootstrap : https://getbootstrap.com/docs/5.0/getting-started/introduction/
+
