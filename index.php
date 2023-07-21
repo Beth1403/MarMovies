@@ -22,6 +22,11 @@ function callTMDBAPI($endpoint, $params = array()) {
     return $data;
 }
 
+// Fonction pour obtenir les credits d'un film
+function getMovieCredits($movieId) {
+    return callTMDBAPI('movie/' . $movieId . '/credits');
+}
+
 // Recherche de films
 if (isset($_GET['query'])) {
     $query = urlencode($_GET['query']);
@@ -32,51 +37,16 @@ if (isset($_GET['query'])) {
     // Vérifier si la requête a réussi et s'il y a des résultats
     if ($searchResult && isset($searchResult['results']) && count($searchResult['results']) > 0) {
         $movies = $searchResult['results'];
-        $firstMovieId = $movies[0]['id'];
+
+        // Créer un tableau pour stocker les IDs des films trouvés
+        $movieIds = array();
+        foreach ($movies as $movie) {
+            $movieIds[] = $movie['id'];
+        }
     } else {
         $errorMessage = "Aucun résultat trouvé pour la recherche : " . urldecode($query);
     }
-    if (isset($firstMovieId)) {
-        // Effectuer une nouvelle requête pour obtenir les détails complets du film
-        $movieDetails = callTMDBAPI('movie/'.$firstMovieId);
-        // echo '<pre>' , var_dump($movies[0]) , '</pre>';
-        
-        
-    
-       // Fonction pour obtenir les credits d'un film
-function getMovieCredits($movieId) {
-    return callTMDBAPI('movie/' . $movieId . '/credits');
 }
-
-
-
-if (isset($firstMovieId)) {
-    // Obtenir les détails d'un film
-    $movieDetails = callTMDBAPI('movie/' . $firstMovieId);
-
-    
-    $movieCredits = getMovieCredits($firstMovieId);
-
-    // Vérifier si les détails et les crédits du filmsont présents
-    if ($movieDetails && $movieCredits) {
-        $movieTitle = $movieDetails['title'];
-        $releaseDate = $movieDetails['release_date'];
-        $overview = $movieDetails['overview'];
-        
-
-        // Chercher le réalisateur dans les crédits
-        $director = null;
-        foreach ($movieCredits['crew'] as $crewMember) {
-            if ($crewMember['job'] == 'Director') {
-                $director = $crewMember['name'];
-                break; // Stop la boucle une fois le réalisateur trouvé 
-            }
-        }
-    }
-}
-
-        
-    }}
 
 $data = array("headerTitle" => "MarMovies");
 include("templates/header.php");
@@ -86,39 +56,57 @@ include("templates/header.php");
 <html>
 <head>
     <title>Mar Movies</title>
-    <!-- Inclure ici vos fichiers CSS -->
+    <!-- CSS -->
 </head>
 <body>
     <h1>Rechercher un film</h1>
+    
     <form action="index.php" method="GET">
         <input type="text" name="query" placeholder="Entrez le titre du film" required>
         <button type="submit">Rechercher</button>
     </form>
 
-    <?php if (isset($movieTitle)): ?>
-    <h2>Détails du film :</h2>
-    <?php
-    // Vérifier si l'image de l'affiche est disponible
-    if (isset($movieDetails['poster_path'])) {
-        $posterUrl = 'https://image.tmdb.org/t/p/w500' . $movieDetails['poster_path'];
-        ?>
-        <img src="<?php echo $posterUrl; ?>" alt="<?php echo $movieTitle; ?> Poster">
-    <?php } ?>
-    <h3> <?php echo $movieTitle; ?> </h3>
-    <h3> (<?php echo $releaseDate; ?>) </h3>
-    <?php if (isset($director)): ?>
-        <p>Réalisateur : <?php echo $director; ?></p>
+    <?php if (isset($movies)): ?>
+        <h2>Résultats de la recherche :</h2>
+        <?php foreach ($movies as $movie): ?>
+            <h3><?php echo $movie['title']; ?></h3>
+            <h3>(<?php echo $movie['release_date']; ?>)</h3>
+
+            <?php
+            // Vérifier si l'image de l'affiche est disponible
+            if (isset($movie['poster_path'])) {
+                $posterUrl = 'https://image.tmdb.org/t/p/w500' . $movie['poster_path'];
+                ?>
+                <img src="<?php echo $posterUrl; ?>" alt="<?php echo $movie['title']; ?> Poster">
+            <?php } ?>
+
+            <?php
+            // Obtenir les crédits du film
+            $movieCredits = getMovieCredits($movie['id']);
+            
+            // Chercher le réalisateur dans les crédits
+            $director = null;
+            foreach ($movieCredits['crew'] as $crewMember) {
+                if ($crewMember['job'] == 'Director') {
+                    $director = $crewMember['name'];
+                    break; // Stop la boucle une fois le réalisateur trouvé 
+                }
+            }
+            ?>
+
+            <?php if (isset($director)): ?>
+                <p>Réalisateur : <?php echo $director; ?></p>
+            <?php endif; ?>
+
+            <p> <?php echo $movie['overview']; ?> </p>
+        <?php endforeach; ?>
     <?php endif; ?>
-    <p>Synopsis : <?php echo $overview; ?></p>
-<?php endif; ?>
 
     <?php if (isset($errorMessage)): ?>
         <p><?php echo $errorMessage; ?></p>
     <?php endif; ?>
 
-    <!-- Inclure ici vos fichiers JavaScript -->
-    <?php
-include("templates/footer.php");
-?>
+    <!-- JavaScript -->
+    <?php include("templates/footer.php"); ?>
 </body>
 </html>
