@@ -21,14 +21,39 @@
 </head>
 
 <body>
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="containerNav">
+<header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-between">
+            <div class="container-fluid">
 
+               
+
+                <!-- Logo et nom du site -->
+                <img src="/MarMovies/img/logo.png" alt="" class="logo">
                 <a class="navbar-brand" href="./">
                     Mar Movies
                 </a>
-            
+
+                 <!-- Bouton hamburger visible sur mobile et tablette -->
+                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Menu de navigation -->
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Accueil</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Mes films</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">À propos</a>
+                        </li>
+                        
+                    </ul>
+                </div>
             </div>
         </nav>
     </header>

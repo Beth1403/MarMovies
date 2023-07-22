@@ -29,23 +29,20 @@ function getMovieCredits($movieId)
     return callTMDBAPI('movie/' . $movieId . '/credits');
 }
 
-// Fonction pour obtenir le trailer d'un film
-function getMovieTrailerURL($movieId)
+// Fonction pour obtenir le poster d'un film
+function getMoviePosterURL($movieId)
 {
-    $videos = callTMDBAPI('movie/' . $movieId . '/videos');
-    $trailerUrl = null;
+    $movieDetails = callTMDBAPI('movie/' . $movieId);
 
-    if (isset($videos['results']) && is_array($videos['results'])) {
-        foreach ($videos['results'] as $video) {
-            if ($video['type'] === 'Trailer') {
-                $trailerUrl = 'https://www.youtube.com/embed/' . $video['key'];
-                break;
-            }
-        }
+    $posterUrl = null;
+
+    if (isset($movieDetails['poster_path'])) {
+        $posterUrl = 'https://image.tmdb.org/t/p/w500/' . $movieDetails['poster_path'];
     }
 
-    return $trailerUrl;
+    return $posterUrl;
 }
+
 
 // Recherche de films
 if (isset($_GET['query'])) {
@@ -65,49 +62,56 @@ if (isset($_GET['query'])) {
         }
     } else {
         $errorMessage = "Aucun résultat trouvé pour la recherche : " . urldecode($query);
+    
     }
-}
+} else {
+        // Code pour afficher un fond d'écran générique lorsqu'aucune recherche n'est effectuée
+        $backgroundImage = '/MarMovies/img/cinema.jpg';
+    }
+
+        
+    
+        
 // <!-- header -->
 $data = array("headerTitle" => "Mar Movies");
 include("templates/header.php");
 ?>
 
-     <!-- Trailer en background -->
-     <div id="trailerBackground">
-        <iframe id="trailerIframe" src="" frameborder="0" allowfullscreen loop style="position: absolute; top: 0; left: 0;"></iframe>
-    </div>
+<!-- Background image : poster du premier film trouvé ou photo cinéma vide si aucune recherche n'est faite -->
+<body style="background-image: url('<?php echo (isset($movies) && count($movies) > 0) ? getMoviePosterURL($movies[0]['id']) : $backgroundImage; ?>'); background-position: center; background-color: rgba(0, 0, 0, 0.4);">
 
-    <div class="container mt-5">
 
-        <div class="row">
 
-            <div class="col">
 
-                <h1 class="mb-4">Rechercher un film</h1>
+<div class="container mt-5">
 
-                <form action="index.php" method="GET" class="mb-3">
-                    <div class="input-group">
-                        <input type="text" name="query" class="form-control" placeholder="Entrez le titre du film" required>
-                        <div class="input-group-append">
-                            <button type="submit" class="btn btn-custom">Rechercher</button>
-                        </div>
+    <div class="row">
+
+        <div class="col">
+
+            <h1 class="mb-4">Rechercher un film</h1>
+
+            <form action="index.php" method="GET" class="mb-3">
+                <div class="input-group">
+                    <input type="text" name="query" class="form-control" placeholder="Entrez le titre du film" required>
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-custom">Rechercher</button>
                     </div>
-                </form>
+                </div>
+            </form>
 
-                <!-- Carrousel -->
-                <div id="movieCarousel" class="carousel slide">
+            <!-- Carrousel -->
+            <div id="movieCarousel" class="carousel slide carousel-fade" data-interval="false">
                     <div class="carousel-inner">
                         <?php if (isset($movies)) : ?>
                             <?php $carouselItemIndex = 0; ?>
                             <?php foreach ($movies as $index => $movie) : ?>
-                                <?php $trailerUrl = getMovieTrailerURL($movie['id']); ?>
-                                <?php $carouselItemClass = ($carouselItemIndex === 0) ? 'carousel-item active' : 'carousel-item'; ?>
-                                <div class="<?php echo $carouselItemClass; ?>">
+                                <div class="carousel-item <?php echo ($carouselItemIndex === 0) ? 'active' : ''; ?>">
                                     <div class="card mb-3">
                                         <div class="row no-gutters">
                                             <div class="col-md-4">
                                                 <?php
-                                                // poster disponible ?
+                                                // Poster available?
                                                 if (isset($movie['poster_path'])) {
                                                     $posterUrl = 'https://image.tmdb.org/t/p/w500' . $movie['poster_path'];
                                                 ?>
@@ -122,7 +126,7 @@ include("templates/header.php");
                                                     <p class="card-text">
                                                         <small class="text-muted">
                                                             <?php
-                                                            // Change le format de la date
+                                                            // Format date en français
                                                             $releaseDate = $movie['release_date'];
                                                             $formattedDate = date('d/m/Y', strtotime($releaseDate));
                                                             echo $formattedDate;
@@ -131,15 +135,15 @@ include("templates/header.php");
                                                     </p>
 
                                                     <?php
-                                                    // obtenir les movie credits
+                                                    // Obtenir les movie credits
                                                     $movieCredits = getMovieCredits($movie['id']);
 
-                                                    // trouver le réalisateur
+                                                    // Trouver le réalisateur
                                                     $director = null;
                                                     foreach ($movieCredits['crew'] as $crewMember) {
                                                         if ($crewMember['job'] == 'Director') {
                                                             $director = $crewMember['name'];
-                                                            break; // Stop la boucle lorsqu'il est trouvé
+                                                            break; // Stop la boucle quand le réal est trouvé
                                                         }
                                                     }
                                                     ?>
@@ -158,6 +162,8 @@ include("templates/header.php");
                             <?php endforeach; ?>
                         <?php endif; ?>
                     </div>
+
+                    <?php if (!empty($movies)) : ?>
                     <a class="carousel-control-prev" href="#movieCarousel" role="button" data-slide="prev">
                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                         <span class="sr-only">Précédent</span>
@@ -166,6 +172,7 @@ include("templates/header.php");
                         <span class="carousel-control-next-icon" aria-hidden="true"></span>
                         <span class="sr-only">Suivant</span>
                     </a>
+                    <?php endif; ?>
                 </div>
 
                 <?php if (isset($errorMessage)) : ?>
@@ -175,19 +182,7 @@ include("templates/header.php");
         </div>
     </div>
 
-    <!-- ... footer ... -->
-    <?php include("templates/footer.php"); ?>
+        
 
-    
-
-   
-   
-    
-
-   
-
-    
-
-
-
-
+<!-- ... footer ... -->
+<?php include("templates/footer.php"); ?>
