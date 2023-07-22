@@ -24,9 +24,7 @@
 <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-between">
             <div class="container-fluid">
-
-               
-
+              
                 <!-- Logo et nom du site -->
                 <img src="/MarMovies/img/logo.png" alt="" class="logo">
                 <a class="navbar-brand" href="./">

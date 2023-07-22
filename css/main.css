@@ -20,9 +20,9 @@ body {
 }
 
 .logo {
-    width: 100px; /* Définissez la largeur souhaitée ici */
-    height: auto; /* Laissez la hauteur ajustée automatiquement pour conserver les proportions */
-    margin-right: 10px; /* Espacement entre le logo et le texte */
+    width: 100px;
+    height: auto;
+    margin-right: 10px;
 }
 
 
@@ -51,24 +51,21 @@ h2 {
     height: 100%;
     margin: 0 auto;
 }
+
 .carousel-control-prev,
 .carousel-control-next {
     top: unset;
     bottom: 25px;
 
 }
+
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
-    /* Add your custom styles here */
-   
     width: 40px;
-    /* Adjust the width as needed */
     height: 40px;
-    /* Adjust the height as needed */
     background-color: #343a40;
-    /* Change the background color */
     border-radius: 50%;
     padding: 10px;
     opacity: 0.9;
-    /* To create circular icons, adjust the radius as needed */
+
 }

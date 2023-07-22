@@ -62,46 +62,44 @@ if (isset($_GET['query'])) {
         }
     } else {
         $errorMessage = "Aucun résultat trouvé pour la recherche : " . urldecode($query);
-    
     }
 } else {
-        // Code pour afficher un fond d'écran générique lorsqu'aucune recherche n'est effectuée
-        $backgroundImage = '/MarMovies/img/cinema.jpg';
-    }
+    // Code pour afficher un fond d'écran générique lorsqu'aucune recherche n'est effectuée
+    $backgroundImage = '/MarMovies/img/cinema.jpg';
+}
 
-        
-    
-        
+
+
+
 // <!-- header -->
 $data = array("headerTitle" => "Mar Movies");
 include("templates/header.php");
 ?>
 
-<!-- Background image : poster du premier film trouvé ou photo cinéma vide si aucune recherche n'est faite -->
+<!-- Background image : poster du premier film trouvé ou photo popcorn si aucune recherche n'est faite -->
+
 <body style="background-image: url('<?php echo (isset($movies) && count($movies) > 0) ? getMoviePosterURL($movies[0]['id']) : $backgroundImage; ?>'); background-position: center; background-color: rgba(0, 0, 0, 0.4);">
 
 
+    <div class="container mt-5">
 
+        <div class="row">
 
-<div class="container mt-5">
+            <div class="col">
 
-    <div class="row">
+                <h1 class="mb-4">Rechercher un film</h1>
 
-        <div class="col">
-
-            <h1 class="mb-4">Rechercher un film</h1>
-
-            <form action="index.php" method="GET" class="mb-3">
-                <div class="input-group">
-                    <input type="text" name="query" class="form-control" placeholder="Entrez le titre du film" required>
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-custom">Rechercher</button>
+                <form action="index.php" method="GET" class="mb-3">
+                    <div class="input-group">
+                        <input type="text" name="query" class="form-control" placeholder="Entrez le titre du film" required>
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-custom">Rechercher</button>
+                        </div>
                     </div>
-                </div>
-            </form>
+                </form>
 
-            <!-- Carrousel -->
-            <div id="movieCarousel" class="carousel slide carousel-fade" data-interval="false">
+                <!-- Carrousel -->
+                <div id="movieCarousel" class="carousel slide carousel-fade" data-interval="false">
                     <div class="carousel-inner">
                         <?php if (isset($movies)) : ?>
                             <?php $carouselItemIndex = 0; ?>
@@ -111,7 +109,7 @@ include("templates/header.php");
                                         <div class="row no-gutters">
                                             <div class="col-md-4">
                                                 <?php
-                                                // Poster available?
+                                                // Poster dispo?
                                                 if (isset($movie['poster_path'])) {
                                                     $posterUrl = 'https://image.tmdb.org/t/p/w500' . $movie['poster_path'];
                                                 ?>
@@ -162,16 +160,16 @@ include("templates/header.php");
                             <?php endforeach; ?>
                         <?php endif; ?>
                     </div>
-
+                    <!-- Ne pas afficher les flèches du carrousel quand le tableau $movies est vide (aucune recherche) -->
                     <?php if (!empty($movies)) : ?>
-                    <a class="carousel-control-prev" href="#movieCarousel" role="button" data-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Précédent</span>
-                    </a>
-                    <a class="carousel-control-next" href="#movieCarousel" role="button" data-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Suivant</span>
-                    </a>
+                        <a class="carousel-control-prev" href="#movieCarousel" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Précédent</span>
+                        </a>
+                        <a class="carousel-control-next" href="#movieCarousel" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Suivant</span>
+                        </a>
                     <?php endif; ?>
                 </div>
 
@@ -182,7 +180,7 @@ include("templates/header.php");
         </div>
     </div>
 
-        
 
-<!-- ... footer ... -->
-<?php include("templates/footer.php"); ?>
+
+    <!-- ... footer ... -->
+    <?php include("templates/footer.php"); ?>
